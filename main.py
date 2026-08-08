@@ -6,6 +6,8 @@ from datetime import datetime
 from curl_cffi import requests
 
 URL = "https://sodoc.embaven.cl/"
+REQUEST_TIMEOUT_SECONDS = 15
+MAX_REQUEST_ATTEMPTS = 3
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "TOKEN_NO_CONFIGURADO")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "CHAT_ID_NO_CONFIGURADO")
@@ -45,8 +47,13 @@ def enviar_notificacion_telegram(mensaje: str) -> bool:
     api_url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = {"chat_id": TELEGRAM_CHAT_ID, "text": mensaje}
 
-    response = requests.post(api_url, data=payload, timeout=10)
-    response.raise_for_status()
+    try:
+        response = requests.post(api_url, data=payload, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as error:
+        logger.error("No se pudo enviar la notificación a Telegram: %s", error)
+        return False
+
     logger.info("Notificación enviada a Telegram correctamente.")
     return True
 
@@ -56,11 +63,31 @@ def verificar_estado(url: str) -> bool:
         "User-Agent": "bruno-runtime/4.0.0",
         "Accept": "application/json, text/plain, */*",
     }
-    response = requests.get(url, timeout=15, headers=headers, verify=False)
-    if sitio_funcionando(response.text):
-        return True
-    else:
-        return False
+    for intento in range(1, MAX_REQUEST_ATTEMPTS + 1):
+        try:
+            response = requests.get(
+                url,
+                timeout=REQUEST_TIMEOUT_SECONDS,
+                headers=headers,
+                verify=False,
+            )
+            response.raise_for_status()
+            return sitio_funcionando(response.text)
+        except requests.exceptions.RequestException as error:
+            logger.warning(
+                "No se pudo comprobar %s (intento %d/%d): %s",
+                url,
+                intento,
+                MAX_REQUEST_ATTEMPTS,
+                error,
+            )
+            if intento < MAX_REQUEST_ATTEMPTS:
+                time.sleep(intento)
+
+    logger.error(
+        "El sitio %s no respondió tras %d intentos.", url, MAX_REQUEST_ATTEMPTS
+    )
+    return False
 
 
 def sitio_funcionando(html: str) -> bool:
