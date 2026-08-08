@@ -21,14 +21,13 @@ jobs:
           enable-cache: true
 
       - name: Instalar dependencias
-
-        run: uv add curl-cffi
+        run: uv sync --locked
 
       - name: Ejecutar script de monitoreo
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python main.py
+        run: uv run python main.py
 
       - name: Commit y Push de los logs
         run: |
