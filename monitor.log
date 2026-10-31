@@ -1510,3 +1510,8 @@
 2026-10-31 04:58:46,218 [WARNING] No se pudo comprobar https://sodoc.embaven.cl/ (intento 3/3): Failed to perform, curl: (28) Connection timed out after 15002 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
 2026-10-31 04:58:46,218 [ERROR] El sitio https://sodoc.embaven.cl/ no respondió tras 3 intentos.
 2026-10-31 04:58:46,218 [WARNING] Fail: El sitio https://sodoc.embaven.cl/ no está funcionando correctamente.
+2026-10-31 11:59:02,859 [WARNING] No se pudo comprobar https://sodoc.embaven.cl/ (intento 1/3): Failed to perform, curl: (28) Connection timed out after 15003 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-10-31 11:59:18,863 [WARNING] No se pudo comprobar https://sodoc.embaven.cl/ (intento 2/3): Failed to perform, curl: (28) Connection timed out after 15003 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-10-31 11:59:35,867 [WARNING] No se pudo comprobar https://sodoc.embaven.cl/ (intento 3/3): Failed to perform, curl: (28) Connection timed out after 15002 milliseconds. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+2026-10-31 11:59:35,868 [ERROR] El sitio https://sodoc.embaven.cl/ no respondió tras 3 intentos.
+2026-10-31 11:59:35,868 [WARNING] Fail: El sitio https://sodoc.embaven.cl/ no está funcionando correctamente.
